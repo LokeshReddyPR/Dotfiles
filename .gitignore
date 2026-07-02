@@ -1,0 +1,22 @@
+#System files 
+.DS_Store
+.DS_Store?
+._*
+
+# Build files and source maps
+*.js.map
+
+# Backup files
+*~
+
+# Configuration directories
+raycast/
+htop/
+git/
+jgit/
+btop/
+configstore/
+fish/
+gh/
+alacritty/
+DS_Store

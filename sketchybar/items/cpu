@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+source "$CONFIG_DIR/environment"
+source "$THEME_DIR/tokyonight"
+
+CPU_LABEL_COLOR="$blue"
+CPU_BACKGROUND_BORDER_COLOR="$blue"
+
+sketchybar --add item cpu_gap right \
+           --set      cpu_gap \
+                      width=10 \
+                      background.drawing=off
+
+sketchybar --add item cpu_spacer_right right \
+           --set      cpu_spacer_right \
+                      background.drawing=off
+
+sketchybar --add item cpu right \
+           --set      cpu \
+                      background.drawing=off \
+                      icon="" \
+                      icon.drawing=on \
+                      icon.color="$CPU_LABEL_COLOR" \
+                      icon.font="$LABEL_BASE_FONT:Bold:16.0" \
+                      icon.padding_right=6 \
+                      label.color="$CPU_LABEL_COLOR" \
+                      label.padding_left=0 \
+                      label.padding_right=0 \
+                      update_freq=5 \
+                      script="$PLUGIN_DIR/cpu"
+
+sketchybar --add item cpu_spacer_left right \
+           --set      cpu_spacer_left \
+                      background.drawing=off
+
+sketchybar --add bracket cpu_bracket cpu_spacer_left cpu cpu_spacer_right \
+           --set         cpu_bracket \
+                         background.border_color="$CPU_BACKGROUND_BORDER_COLOR" \
+                         background.corner_radius="$BRACKET_BACKGROUND_CORNER_RADIUS" \
+                         background.border_width="$BRACKET_BACKGROUND_BORDER_WIDTH"
