@@ -49,7 +49,7 @@ bindkey '^[[B' history-search-forward
 
 # ---- Eza (better ls) -----
 
-alias ls="eza --icons=always"
+alias ls="eza --icons=always -a"
 
 # ---- Zoxide (better cd) ----
 eval "$(zoxide init --cmd cd zsh)"
@@ -114,3 +114,14 @@ export NVM_DIR="$HOME/.nvm"
   [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 # Load Angular CLI autocompletion.
 source <(ng completion script)
+
+
+# copy current command to clipboard
+copy-command(){
+  echo -n $BUFFER | pbcopy # or xclip 
+  zle -M "Copied to clipboard"
+}
+zle -N copy-command
+bindkey '^Xc' copy-command
+
+

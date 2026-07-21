@@ -20,3 +20,6 @@ fish/
 gh/
 alacritty/
 DS_Store
+
+# TPM-managed tmux plugins (external repos, installed via `prefix + I`)
+.config/tmux/plugins/

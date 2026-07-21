@@ -1,0 +1,15 @@
+# Default necessary ignores
+^\.git$
+^\.gitignore$
+^README.*
+^LICENSE.*
+.DS_Store
+^\.DS_Store$
+
+
+
+
+# Your custom ignores
+^notes\.txt$
+^secret_folder/
+
