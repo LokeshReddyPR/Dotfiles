@@ -1,3 +1,12 @@
+# If the current directory no longer exists (e.g. it was deleted/renamed while a
+# tmux pane stayed open, or restored by tmux-resurrect), drop back to $HOME so
+# commands don't fail with "getcwd: cannot access parent directories" /
+# "ENOENT: uv_cwd". Use the external `pwd`, which does a real getcwd() and fails
+# when the dir is gone (the `cd .` builtin can succeed off a cached $PWD).
+if ! command pwd >/dev/null 2>&1; then
+  cd "$HOME" 2>/dev/null || cd /
+fi
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
