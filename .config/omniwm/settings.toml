@@ -1,9 +1,6 @@
 monitorBarOverrides = []
 monitorDwindleOverrides = []
-monitorGapOverrides = []
-monitorNiriOverrides = []
 monitorOrientationOverrides = []
-monitorRoutingOverrides = []
 
 [appearance]
 mode = "dark"
@@ -41,7 +38,7 @@ moveCrossesMonitorAtEdge = false
 moveMouseToFocusedWindow = false
 
 [gaps]
-size = 9.0
+size = 7.0
 
 [gaps.outer]
 bottom = 0.0
@@ -67,10 +64,19 @@ scrollEnabled = true
 scrollModifierKey = "optionShift"
 scrollSensitivity = 5.0
 trackpadScrollStyle = "snap"
+workspaceSwipeAxis = "vertical"
+workspaceSwipeEnabled = false
+workspaceSwipeFingerCount = 3
+
+[hiddenBar]
+enabled = true
+hiddenBundleIDs = []
+rehideIntervalSeconds = 5.0
 
 [mouseWarp]
+constrainToArrangement = false
 enabled = false
-margin = 1
+margin = 5
 
 [niri]
 alwaysCenterSingleColumn = false
@@ -80,6 +86,35 @@ defaultColumnWidth = 0.5
 infiniteLoop = false
 maxVisibleColumns = 2
 singleWindowAspectRatio = "fill"
+
+[overview]
+zoom = 1.0
+
+[overview.backdrop]
+alpha = 1.0
+blue = 0.08
+green = 0.05
+red = 0.05
+
+[overview.windowBorders]
+
+[overview.windowBorders.hovered]
+alpha = 1.0
+blue = 1.0
+green = 0.6
+red = 0.4
+
+[overview.windowBorders.normal]
+alpha = 0.5
+blue = 0.35
+green = 0.3
+red = 0.3
+
+[overview.windowBorders.selected]
+alpha = 1.0
+blue = 0.4
+green = 0.8
+red = 0.3
 
 [quakeTerminal]
 animationDuration = 0.2
@@ -92,7 +127,7 @@ position = "center"
 widthPercent = 75.0
 
 [routing]
-mode = "macOS"
+mode = "custom"
 
 [statusBar]
 showAppNames = true
@@ -103,6 +138,7 @@ useWorkspaceId = true
 backgroundOpacity = 0.1
 deduplicateAppIcons = false
 enabled = false
+excludedBundleIDs = []
 height = 24.0
 hideEmptyWorkspaces = true
 labelFontSize = 12.0
@@ -454,7 +490,7 @@ binding = "Control+Command+Grave"
 id = "focusMonitorLast"
 
 [[hotkeys]]
-binding = "Option+F"
+binding = "Option+Shift+F"
 id = "toggleFullscreen"
 
 [[hotkeys]]
@@ -468,6 +504,14 @@ id = "moveColumn.left"
 [[hotkeys]]
 binding = "Control+Option+Shift+Right Arrow"
 id = "moveColumn.right"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "moveColumn.up"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "moveColumn.down"
 
 [[hotkeys]]
 binding = "Control+Option+Home"
@@ -622,7 +666,7 @@ binding = "Unassigned"
 id = "cycleWindowHeightBackward"
 
 [[hotkeys]]
-binding = "Option+Shift+F"
+binding = "Option+F"
 id = "toggleColumnFullWidth"
 
 [[hotkeys]]
@@ -767,7 +811,7 @@ id = "toggleWorkspaceBarVisibility"
 
 [[hotkeys]]
 binding = "Unassigned"
-id = "toggleHiddenBar"
+id = "toggleHiddenBarPanel"
 
 [[hotkeys]]
 binding = "Option+Grave"
@@ -784,6 +828,36 @@ id = "toggleOverview"
 [[hotkeys]]
 binding = "Unassigned"
 id = "toggleSystemStats"
+
+[[monitorGapOverrides]]
+id = "6170A5FF-5953-43F6-8B96-4D9816507B1C"
+monitorDisplayId = 2
+monitorName = "BL650"
+outerGapTop = 39.0
+
+[[monitorNiriOverrides]]
+id = "870B3B7A-AA3A-4307-9D70-E6983CB743BA"
+monitorDisplayId = 2
+monitorName = "BL650"
+singleWindowAspectRatio = "1920x1080"
+
+[[monitorNiriOverrides]]
+id = "AA5F8FED-681F-403A-B558-E7FD6FA201EF"
+monitorDisplayId = 1
+monitorName = "Built-in Retina Display"
+singleWindowAspectRatio = "fill"
+
+[[monitorRoutingOverrides]]
+gridColumn = 1
+gridRow = 0
+monitorDisplayId = 1
+monitorName = "Built-in Retina Display"
+
+[[monitorRoutingOverrides]]
+gridColumn = 0
+gridRow = 0
+monitorDisplayId = 2
+monitorName = "BL650"
 
 [[workspaces]]
 id = "AD36F001-C57E-41A5-AC1D-DF5249D007F0"
