@@ -25,12 +25,13 @@ maxTotalBytes = 67108864
 defaultSplitRatio = 1.0
 moveToRootStable = true
 singleWindowAspectRatio = "fill"
+singleWindowFit = "fill"
 smartSplit = true
 splitWidthMultiplier = 1.0
 useGlobalGaps = true
 
 [focus]
-crossesMonitorAtEdge = true
+crossesMonitorAtEdge = false
 followsMouse = false
 followsWindowToMonitor = false
 lockModifier = "off"
@@ -82,10 +83,12 @@ margin = 5
 alwaysCenterSingleColumn = false
 centerFocusedColumn = "never"
 columnWidthPresets = [0.3333333333333333, 0.5, 0.6666666666666666]
-defaultColumnWidth = 0.5
+containerPrimarySpanPresets = [0.3333333333333333, 0.5, 0.6666666666666666]
 infiniteLoop = false
 maxVisibleColumns = 2
 singleWindowAspectRatio = "fill"
+singleWindowFit = "1920x1080"
+visibleContainerCount = 2
 
 [overview]
 zoom = 1.0
@@ -154,6 +157,8 @@ systemStatsButton = false
 windowLevel = "popup"
 xOffset = -801.0
 yOffset = 30.0
+
+[workspaceBar.iconOverrides]
 
 [[appRules]]
 bundleId = "com.openai.codex"
@@ -643,63 +648,63 @@ id = "moveColumnToIndex.9"
 
 [[hotkeys]]
 binding = "Option+Period"
-id = "cycleColumnWidthForward"
+id = "cycleSizeForward"
 
 [[hotkeys]]
 binding = "Option+Comma"
-id = "cycleColumnWidthBackward"
+id = "cycleSizeBackward"
 
 [[hotkeys]]
 binding = "Unassigned"
-id = "cycleWindowWidthForward"
+id = "cycleWindowPrimarySpanForward"
 
 [[hotkeys]]
 binding = "Unassigned"
-id = "cycleWindowWidthBackward"
+id = "cycleWindowPrimarySpanBackward"
 
 [[hotkeys]]
 binding = "Unassigned"
-id = "cycleWindowHeightForward"
+id = "cycleWindowSecondarySpanForward"
 
 [[hotkeys]]
 binding = "Unassigned"
-id = "cycleWindowHeightBackward"
+id = "cycleWindowSecondarySpanBackward"
 
 [[hotkeys]]
 binding = "Option+F"
-id = "toggleColumnFullWidth"
+id = "toggleContainerFullPrimarySpan"
 
 [[hotkeys]]
 binding = "Control+Option+F"
-id = "expandColumnToAvailableWidth"
+id = "expandContainerToAvailablePrimarySpan"
 
 [[hotkeys]]
 binding = "Control+Option+R"
-id = "resetWindowHeight"
+id = "resetWindowSecondarySpan"
 
 [[hotkeys]]
 binding = "Option+Minus"
-id = "setColumnWidth.decrease10Percent"
+id = "setContainerPrimarySpan.decrease10Percent"
 
 [[hotkeys]]
 binding = "Option+Equal"
-id = "setColumnWidth.increase10Percent"
+id = "setContainerPrimarySpan.increase10Percent"
 
 [[hotkeys]]
 binding = "Unassigned"
-id = "setWindowWidth.decrease10Percent"
+id = "setWindowPrimarySpan.decrease10Percent"
 
 [[hotkeys]]
 binding = "Unassigned"
-id = "setWindowWidth.increase10Percent"
+id = "setWindowPrimarySpan.increase10Percent"
 
 [[hotkeys]]
 binding = "Option+Shift+Minus"
-id = "setWindowHeight.decrease10Percent"
+id = "setWindowSecondarySpan.decrease10Percent"
 
 [[hotkeys]]
 binding = "Option+Shift+Equal"
-id = "setWindowHeight.increase10Percent"
+id = "setWindowSecondarySpan.increase10Percent"
 
 [[hotkeys]]
 binding = "Option+Shift+B"
@@ -830,22 +835,21 @@ binding = "Unassigned"
 id = "toggleSystemStats"
 
 [[monitorGapOverrides]]
-id = "6170A5FF-5953-43F6-8B96-4D9816507B1C"
-monitorDisplayId = 2
+id = "DF365BF0-E07A-414E-90FE-A2B81763A6C0"
+monitorDisplayUUID = "6544F79D-12AD-496E-9DEF-33EC3CB6BF54"
 monitorName = "BL650"
-outerGapTop = 39.0
+outerGapTop = 34.0
 
 [[monitorNiriOverrides]]
-id = "870B3B7A-AA3A-4307-9D70-E6983CB743BA"
-monitorDisplayId = 2
+id = "E8794088-9E13-4AD7-9E7C-80FF6B813338"
+monitorDisplayUUID = "6544F79D-12AD-496E-9DEF-33EC3CB6BF54"
 monitorName = "BL650"
-singleWindowAspectRatio = "1920x1080"
+singleWindowFit = "1920x1080"
 
 [[monitorNiriOverrides]]
 id = "AA5F8FED-681F-403A-B558-E7FD6FA201EF"
 monitorDisplayId = 1
 monitorName = "Built-in Retina Display"
-singleWindowAspectRatio = "fill"
 
 [[monitorRoutingOverrides]]
 gridColumn = 1
@@ -897,10 +901,9 @@ layoutType = "niri"
 name = "5"
 
 [workspaces.monitorAssignment]
-type = "main"
+type = "secondary"
 
 [[workspaces]]
-displayName = "❤️"
 id = "5953F2BF-A378-4266-91B2-287174C4FA4D"
 layoutType = "niri"
 name = "6"
@@ -909,7 +912,6 @@ name = "6"
 type = "secondary"
 
 [[workspaces]]
-displayName = "🚀"
 id = "A7D5E104-6985-4516-8ED5-07F144F2A33D"
 layoutType = "niri"
 name = "7"

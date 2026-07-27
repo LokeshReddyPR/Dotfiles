@@ -58,7 +58,8 @@ bindkey '^[[B' history-search-forward
 
 # ---- Eza (better ls) -----
 
-alias ls="eza --icons=always -a"
+alias ls="eza --icons --grid --group-directories-first -a"
+
 
 # ---- Zoxide (better cd) ----
 eval "$(zoxide init --cmd cd zsh)"
