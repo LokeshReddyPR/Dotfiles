@@ -11,6 +11,11 @@ window-height = 25
 background-opacity = 0.8
 background-blur = true
 
+
+# --- Custom Cursor Shader Animations ---
+custom-shader = shaders/cursor_warp.glsl
+custom-shader-animation = always
+
 # This hides the top bar entirely but lets you drag the window from anywhere!
 macos-titlebar-style = hidden
 

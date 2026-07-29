@@ -132,6 +132,8 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza --icons=always --tree -
 # Force Zsh completion to include hidden files/directories in fzf-tab
 _comp_options+=(glob_dots)
 zstyle ':completion:*' special-dirs true
+# EXCLUDE .git folders from ever showing up in tab completions
+zstyle ':completion:*' ignored-patterns '(*/)#.git'
 # ==============================================================================
 # 6. REPLACEMENT ALIASES & COMPACT MACROS
 # ==============================================================================
