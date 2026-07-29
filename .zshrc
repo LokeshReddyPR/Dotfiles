@@ -6,10 +6,8 @@ if ! command pwd >/dev/null 2>&1; then
   cd "$HOME" 2>/dev/null || cd / 
 fi
 
-# Enable Powerlevel10k instant prompt
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+# Starship prompt config location
+export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 
 # Core Environment Exports
 export EDITOR="nvim"
@@ -37,7 +35,27 @@ setopt hist_ignore_dups
 setopt hist_find_no_dups
 setopt hist_verify
 
-# Custom keybindings (History search using arrow keys)
+# Vi mode
+bindkey -v
+export KEYTIMEOUT=1
+
+# Cursor shape: beam for insert, block for normal
+zle-keymap-select() {
+  if [[ $KEYMAP == vicmd ]]; then
+    echo -ne '\e[2 q'  # block
+  else
+    echo -ne '\e[6 q'  # beam
+  fi
+}
+zle -N zle-keymap-select
+
+zle-line-init() { echo -ne '\e[6 q'; }  # beam on new prompt
+zle -N zle-line-init
+
+# Disable execute-named-cmd on ':' in normal mode (not useful)
+bindkey -M vicmd -r ':'
+
+# Vi mode keybindings for history search
 bindkey '^w' history-search-backward
 bindkey '^b' history-search-forward
 
@@ -53,8 +71,7 @@ if [ ! -f "${ZINIT_HOME}/zinit.zsh" ]; then
 fi
 source "${ZINIT_HOME}/zinit.zsh"
 
-# Load frameworks and UI themes
-zinit ice depth=1; zinit light romkatv/powerlevel10k
+# Load plugins
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
@@ -74,9 +91,8 @@ zinit snippet OMZP::command-not-found
 autoload -Uz compinit && compinit
 zinit cdreplay -q
 zinit light Aloxaf/fzf-tab
-ZSH_THEME="powerlevel10k/powerlevel10k"
-
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# Initialize Starship prompt
+eval "$(starship init zsh)"
 
 # ==============================================================================
 # 4. FZF ENGINE & INTEGRATION OVERLAYS
