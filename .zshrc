@@ -1,137 +1,151 @@
-# If the current directory no longer exists (e.g. it was deleted/renamed while a
-# tmux pane stayed open, or restored by tmux-resurrect), drop back to $HOME so
-# commands don't fail with "getcwd: cannot access parent directories" /
-# "ENOENT: uv_cwd". Use the external `pwd`, which does a real getcwd() and fails
-# when the dir is gone (the `cd .` builtin can succeed off a cached $PWD).
-if ! command pwd >/dev/null 2>&1; then
-  cd "$HOME" 2>/dev/null || cd /
+# ==============================================================================
+# 1. CORE ENVIRONMENT & SHELL RECOVERY
+# ==============================================================================
+# Drop back to $HOME if the current directory no longer exists
+if ! command pwd >/dev/null 2>&1; then 
+  cd "$HOME" 2>/dev/null || cd / 
 fi
 
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
+# Enable Powerlevel10k instant prompt
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+# Core Environment Exports
+export EDITOR="nvim"
+export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+export NVM_DIR="$HOME/.nvm"
 
-# Path to your Oh My Zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
+# Load Node Version Manager (NVM)
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
 
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time Oh My Zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="powerlevel10k/powerlevel10k"
-
-
-plugins=(git)
-
-source $ZSH/oh-my-zsh.sh
-
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-
-
-# history setup
+# ==============================================================================
+# 2. HISTORY SEEDING & STYLING SETTINGS
+# ==============================================================================
 HISTFILE=$HOME/.zhistory
 SAVEHIST=1000
 HISTSIZE=999
+
+setopt appendhistory
 setopt share_history
+setopt hist_ignore_space
 setopt hist_expire_dups_first
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
 setopt hist_ignore_dups
+setopt hist_find_no_dups
 setopt hist_verify
 
+# Custom keybindings (History search using arrow keys)
+bindkey '^w' history-search-backward
+bindkey '^b' history-search-forward
+
+# ==============================================================================
+# 3. ZINIT PLUGIN WORKSPACE
+# ==============================================================================
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+
+# Stronger folder check to prevent broken/empty Git clones
+if [ ! -f "${ZINIT_HOME}/zinit.zsh" ]; then
+    mkdir -p "$(dirname "$ZINIT_HOME")"
+    git clone https://github.com "$ZINIT_HOME"
+fi
+source "${ZINIT_HOME}/zinit.zsh"
+
+# Load frameworks and UI themes
+zinit ice depth=1; zinit light romkatv/powerlevel10k
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
 
 
-# completion using arrow keys (based on history)
-bindkey '^[[A' history-search-backward
-bindkey '^[[B' history-search-forward
+# Load external snippets
+zinit snippet OMZL::git.zsh
+zinit snippet OMZP::git
+zinit snippet OMZP::sudo
+zinit snippet OMZP::archlinux
+zinit snippet OMZP::aws
+zinit snippet OMZP::kubectl
+zinit snippet OMZP::kubectx
+zinit snippet OMZP::command-not-found
 
+# Finalize Zinit engine definitions
+autoload -Uz compinit && compinit
+zinit cdreplay -q
+zinit light Aloxaf/fzf-tab
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
-# ---- Eza (better ls) -----
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-alias ls="eza --icons --grid --group-directories-first -a"
-
-
-# ---- Zoxide (better cd) ----
-eval "$(zoxide init --cmd cd zsh)"
-
-
-
-export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-
-
-
-
-# FzF
-# Set up fzf key bindings and fuzzy completion
+# ==============================================================================
+# 4. FZF ENGINE & INTEGRATION OVERLAYS
+# ==============================================================================
+# Initialize core FZF binary hooks
 eval "$(fzf --zsh)"
 
-# --- setup fzf theme ---
-fg="#CBE0F0"
-bg="#011628"
-bg_highlight="#143652"
-purple="#B388FF"
-blue="#06BCE4"
-cyan="#2CF9ED"
-
-export FZF_DEFAULT_OPTS="--color=fg:${fg},bg:${bg},hl:${purple},fg+:${fg},bg+:${bg_highlight},hl+:${purple},info:${blue},prompt:${cyan},pointer:${cyan},marker:${cyan},spinner:${cyan},header:${cyan}"
-
-# -- Use fd instead of fzf --
-
+# Path generation commands utilizing 'fd'
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
 
-# Use fd (https://github.com/sharkdp/fd) for listing path candidates.
-# - The first argument to the function ($1) is the base path to start traversal
-# - See the source code (completion.{bash,zsh}) for the details.
-_fzf_compgen_path() {
-  fd --hidden --exclude .git . "$1"
-}
+# Tab completion generator fallback rules
+_fzf_compgen_path() { fd --hidden --exclude .git . "$1" }
+_fzf_compgen_dir() { fd --type=d --hidden --exclude .git . "$1" }
 
-# Use fd to generate the list for directory completion
-_fzf_compgen_dir() {
-  fd --type=d --hidden --exclude .git . "$1"
-}
+# Theme Variables and Global Interface Options
+export FZF_DEFAULT_OPTS="
+  --height 50%
+  --layout=reverse
+  --border=rounded
+  --margin=1
+  --padding=1
+  --color=fg:#ebdbb2,bg:#282828,hl:#fabd2f
+  --color=fg+:#ebdbb2,bg+:#3c3836,hl+:#fabd2f
+  --color=info:#83a598,prompt:#b8bb26,pointer:#8ec07c
+  --color=marker:#fe8019,spinner:#fe8019,header:#fb4934,border:#bdae93"
 
+export FZF_TMUX_OPTS=" -p90%,70% "
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/homebrew/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh" ]; then
-        . "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh"
-    else
-        export PATH="/opt/homebrew/Caskroom/miniconda/base/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-#NVM Node Version Manager 
-export NVM_DIR="$HOME/.nvm"
-  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-# Load Angular CLI autocompletion.
+# Smart Ctrl+T Preview Engine: Separates files/folders, opens inside nvim
+export FZF_CTRL_T_OPTS="
+  --preview '[ -d {} ] && eza --icons=always --tree --color=always {} | head -200 || bat --theme=gruvbox-dark --color=always -n --line-range :500 {}'
+  --bind 'enter:execute(if [ -d {} ]; then cd {}; zsh; else nvim {}; fi)'"
+
+# Alt+C Directory Preview Engine
+export FZF_ALT_C_OPTS="--preview 'eza --icons=always --tree --color=always {} | head -200'"
+
+# ==============================================================================
+# 5. AUTOMATIC FZF TABS & PREVIEWS
+# ==============================================================================
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+#zstyle ':completion:*' menu no
+
+# Forces fzf-tab plugin to use your clean global visual properties
+zstyle ':fzf-tab:*' use-fzf-default-opts yes
+
+# Automatically renders live file system trees inside your standard Tab completions
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza --icons=always --tree --color=always $realpath | head -50'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza --icons=always --tree --color=always $realpath | head -50'
+
+# Force Zsh completion to include hidden files/directories in fzf-tab
+_comp_options+=(glob_dots)
+zstyle ':completion:*' special-dirs true
+# ==============================================================================
+# 6. REPLACEMENT ALIASES & COMPACT MACROS
+# ==============================================================================
+# Modern directory tools
+alias ls="eza --icons --grid --group-directories-first -a"
+eval "$(zoxide init --cmd cd zsh)"
+
+# Angular CLI completion loader
 source <(ng completion script)
 
-
-# copy current command to clipboard
-copy-command(){
-  echo -n $BUFFER | pbcopy # or xclip 
-  zle -M "Copied to clipboard"
+# Copy terminal command macro to system clipboard
+copy-command(){ 
+  echo -n $BUFFER | pbcopy 
+  zle -M "Copied to clipboard" 
 }
 zle -N copy-command
 bindkey '^Xc' copy-command
-
-
